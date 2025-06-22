@@ -1,54 +1,45 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Оплата через TON</title>
-  <script src="https://unpkg.com/@tonconnect/sdk@latest"></script>
+  <script type="module">
+    import { TonConnectUI } from "https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js";
+
+    const tonConnectUI = new TonConnectUI({
+      manifestUrl: "https://olegvitsh.github.io/ton-webapp/tonconnect-manifest.json",
+      buttonRootId: "ton-connect-button"
+    });
+
+    document.getElementById("pay").onclick = async () => {
+      const connectedWallet = await tonConnectUI.connectedWallet;
+      if (!connectedWallet) {
+        alert("Сначала подключите кошелёк.");
+        return;
+      }
+
+      try {
+        await tonConnectUI.sendTransaction({
+          validUntil: Math.floor(Date.now() / 1000) + 300,
+          messages: [{
+            address: "ВАШ_TON_АДРЕС",
+            amount: "100000000", // 0.1 TON
+          }]
+        });
+        alert("Транзакция отправлена!");
+      } catch (err) {
+        alert("Ошибка: " + err.message);
+      }
+    };
+  </script>
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2rem; }
     button { font-size: 1.2rem; padding: 1rem 2rem; margin: 1rem; }
   </style>
 </head>
 <body>
-  <h1>Купить жетон 1 уровня</h1>
-  <p>Цена: 0.1 TON</p>
-
-  <button id="connect">🔗 Подключить кошелёк</button>
-  <button id="pay" disabled>💸 Оплатить</button>
-
-  <script>
-    const tonConnect = new TON_CONNECT.TonConnect();
-
-    const connectBtn = document.getElementById("connect");
-    const payBtn = document.getElementById("pay");
-
-    connectBtn.onclick = async () => {
-      try {
-        await tonConnect.connectWallet();
-        alert("Кошелёк подключён! Теперь можно оплатить.");
-        payBtn.disabled = false;
-      } catch (e) {
-        alert("Не удалось подключить кошелёк: " + e.message);
-      }
-    };
-
-    payBtn.onclick = async () => {
-      try {
-        await tonConnect.sendTransaction({
-          validUntil: Math.floor(Date.now() / 1000) + 300,
-          messages: [
-            {
-              address: "EQCijAB8cHLJM54kBIHCiqHNiduac0JNIH_1iZsCzc65m3zj", // 
-              amount: "100000000",      // 0.1 TON в нанотоннах
-              payload: null
-            }
-          ]
-        });
-        alert("Платёж отправлен. После подтверждения вернитесь в Telegram.");
-      } catch (e) {
-        alert("Ошибка оплаты: " + e.message);
-      }
-    };
-  </script>
+  <h1>Оплата через TON</h1>
+  <div id="ton-connect-button"></div>
+  <button id="pay">💸 Оплатить</button>
 </body>
 </html>
