@@ -11,26 +11,30 @@
       buttonRootId: "ton-connect-button"
     });
 
-    document.getElementById("pay").onclick = async () => {
-      const connectedWallet = await tonConnectUI.connectedWallet;
-      if (!connectedWallet) {
-        alert("Сначала подключите кошелёк.");
-        return;
-      }
+    document.addEventListener("DOMContentLoaded", () => {
+      const payBtn = document.getElementById("pay");
 
-      try {
-        await tonConnectUI.sendTransaction({
-          validUntil: Math.floor(Date.now() / 1000) + 300,
-          messages: [{
-            address: "ВАШ_TON_АДРЕС",
-            amount: "100000000", // 0.1 TON
-          }]
-        });
-        alert("Транзакция отправлена!");
-      } catch (err) {
-        alert("Ошибка: " + err.message);
-      }
-    };
+      payBtn.onclick = async () => {
+        const wallet = await tonConnectUI.connectedWallet;
+        if (!wallet) {
+          alert("Сначала подключите кошелёк через кнопку выше.");
+          return;
+        }
+
+        try {
+          await tonConnectUI.sendTransaction({
+            validUntil: Math.floor(Date.now() / 1000) + 300,
+            messages: [{
+              address: "ВАШ_TON_АДРЕС", // ← замените на ваш адрес
+              amount: "100000000",      // 0.1 TON
+            }]
+          });
+          alert("Платёж отправлен. Вернитесь в Telegram.");
+        } catch (err) {
+          alert("Ошибка транзакции: " + err.message);
+        }
+      };
+    });
   </script>
   <style>
     body { font-family: sans-serif; text-align: center; padding: 2rem; }
