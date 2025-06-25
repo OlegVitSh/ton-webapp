@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <title>Оплата через TON</title>
   <script type="module">
-    import { TonConnectUI } from "https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js";
+    import { TonConnectUI } from "https://unpkg.com/@tonconnect/ui@latest";
 
     const tonConnectUI = new TonConnectUI({
-      manifestUrl: "https://olegvitsh.github.io/ton-webapp/tonconnect-manifest.json",
+      manifestUrl: "./tonconnect-manifest.json",
       buttonRootId: "ton-connect-button"
     });
 
@@ -25,8 +25,8 @@
           await tonConnectUI.sendTransaction({
             validUntil: Math.floor(Date.now() / 1000) + 300,
             messages: [{
-              address: "ВАШ_TON_АДРЕС", // ← замените на ваш адрес
-              amount: "100000000",      // 0.1 TON
+              address: "UQCijAB8cHLJM54kBIHCiqHNiduac0JNIH_1iZsCzc65m3zj",
+              amount: "100000000"
             }]
           });
           alert("Платёж отправлен. Вернитесь в Telegram.");
